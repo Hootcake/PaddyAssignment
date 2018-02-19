@@ -122,7 +122,7 @@ public class BankApplication extends JFrame {
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
 
 		nextItemButton = new JButton(new ImageIcon("next.png"));
-		prevItemButton = new JButton(new ImageIcon("previous.png"));
+		prevItemButton = new JButton(new ImageIcon("prev.png"));
 		firstItemButton = new JButton(new ImageIcon("first.png"));
 		lastItemButton = new JButton(new ImageIcon("last.png"));
 		
@@ -158,9 +158,9 @@ public class BankApplication extends JFrame {
     	
     	recordsMenu = new JMenu("Records");
     	
-    	createItem = new JMenuItem("Create Item");
-    	modifyItem = new JMenuItem("Modify Item");
-    	deleteItem = new JMenuItem("Delete Item");
+    	createItem = new JMenuItem("Create Record");
+    	modifyItem = new JMenuItem("Modify Record");
+    	deleteItem = new JMenuItem("Delete Record");
     	setOverdraft = new JMenuItem("Set Overdraft");
     	setInterest = new JMenuItem("Set Interest");
     	
@@ -364,9 +364,11 @@ public class BankApplication extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				
 				 String interestRateStr = JOptionPane.showInputDialog("Enter Interest Rate: (do not type the % sign)");
-				 if(interestRateStr!=null)
+				 double rate = Double.parseDouble(interestRateStr);
+				 if(interestRateStr!=null && rate >= 0 && rate <= 100)
 					 interestRate = Double.parseDouble(interestRateStr);
-			
+				 else
+					 JOptionPane.showMessageDialog(null, "Please enter a valid percentage");
 			}
 		});
 		
@@ -498,36 +500,36 @@ public class BankApplication extends JFrame {
 		
 		deposit.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				String accNum = JOptionPane.showInputDialog("Account number to deposit into: ");
+				final String accNum = JOptionPane.showInputDialog("Account number to deposit into: ");
 				boolean found = false;
-				
 				for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
 					if(accNum.equals(entry.getValue().getAccountNumber().trim())){
 						found = true;
 						String toDeposit = JOptionPane.showInputDialog("Account found, Enter Amount to Deposit: ");
-						entry.getValue().setBalance(entry.getValue().getBalance() + Double.parseDouble(toDeposit));
-						displayDetails(entry.getKey());
+						if(Double.parseDouble(toDeposit) > 0) {
+							entry.getValue().setBalance(entry.getValue().getBalance() + Double.parseDouble(toDeposit));
+							displayDetails(entry.getKey());
+						}
+						else
+							JOptionPane.showMessageDialog(null, "Enter a positive figure");
 						//balanceTextField.setText(entry.getValue().getBalance()+"");
 					}
 				}
 				if (!found)
-					JOptionPane.showMessageDialog(null, "Account number " + accNum + " not found.");
+					if(accNum != null)
+						 JOptionPane.showMessageDialog(null, "Account number " + accNum + " not found.");
 			}
 		});
 		
 		withdraw.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				String accNum = JOptionPane.showInputDialog("Account number to withdraw from: ");
-				String toWithdraw = JOptionPane.showInputDialog("Account found, Enter Amount to Withdraw: ");
-				boolean found;
-				
+				boolean found = false;
 				for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-					
-
 					if(accNum.equals(entry.getValue().getAccountNumber().trim())){
-						
 						found = true;
-						
+						String toWithdraw = JOptionPane.showInputDialog("Account found, Enter Amount to Withdraw: ");
+						if(Double.parseDouble(toWithdraw) > 0) {
 						if(entry.getValue().getAccountType().trim().equals("Current")){
 							if(Double.parseDouble(toWithdraw) > entry.getValue().getBalance() + entry.getValue().getOverdraft())
 								JOptionPane.showMessageDialog(null, "Transaction exceeds overdraft limit");
@@ -537,15 +539,23 @@ public class BankApplication extends JFrame {
 							}
 						}
 						else if(entry.getValue().getAccountType().trim().equals("Deposit")){
-							if(Double.parseDouble(toWithdraw) <= entry.getValue().getBalance()){
+							if(Double.parseDouble(toWithdraw) <= entry.getValue().getBalance() && Double.parseDouble(toWithdraw) > 0){
 								entry.getValue().setBalance(entry.getValue().getBalance()-Double.parseDouble(toWithdraw));
 								displayDetails(entry.getKey());
 							}
 							else
 								JOptionPane.showMessageDialog(null, "Insufficient funds.");
 						}
-					}					
+					}
+						else
+							JOptionPane.showMessageDialog(null, "Please input a positive number");
+					}
 				}
+				 if(!found) {
+					 if(accNum != null)
+						 JOptionPane.showMessageDialog(null, "Account number " + accNum + " not found.");
+
+				 }
 			}
 		});
 		
@@ -640,11 +650,8 @@ public class BankApplication extends JFrame {
 			saveToFileAs();
 	   }
 	
-	public static void saveToFileAs()
-	   {
-		
+	public static void saveToFileAs()  {
 		fc = new JFileChooser();
-		
 		 int returnVal = fc.showSaveDialog(null);
          if (returnVal == JFileChooser.APPROVE_OPTION) {
              File file = fc.getSelectedFile();
@@ -654,7 +661,6 @@ public class BankApplication extends JFrame {
          } else {
              JOptionPane.showMessageDialog(null, "Save cancelled by user");
          }
-        
      	    
 	         try {
 	        	 if(fc.getSelectedFile()==null){
@@ -804,70 +810,3 @@ public static void saveToFile(){
 	
 	
 }
-
-
-
-
-/*
-The task for your second assignment is to construct a system that will allow users to define a data structure representing a collection of records that can be displayed both by means of a dialog that can be scrolled through and by means of a table to give an overall view of the collection contents. 
-The user should be able to carry out tasks such as adding records to the collection, modifying the contents of records, and deleting records from the collection, as well as being able to save and retrieve the contents of the collection to and from external random access files.
-The records in the collection will represent bank account records with the following fields:
-
-AccountID (this will be an integer unique to a particular account and 
-will be automatically generated when a new account record is created)
-
-AccountNumber (this will be a string of eight digits and should also 
-be unique - you will need to check for this when creating a new record)
-
-Surname (this will be a string of length 20)
-
-FirstName (this will be a string of length 20)
-
-AccountType (this will have two possible options - "Current " and 
-"Deposit" - and again will be selected from a drop down list when 
-entering a record)
-
-Balance (this will a real number which will be initialised to 0.0 
-and can be increased or decreased by means of transactions)
-
-Overdraft (this will be a real number which will be initialised 
-to 0.0 but can be updated by means of a dialog - it only applies 
-to current accounts)
-
-You may consider whether you might need more than one class to deal with bank accounts.
-The system should be menu-driven, with the following menu options:
-
-Navigate: First, Last, Next, Previous, Find By Account Number 
-(allows you to find a record by account number entered via a 
-dialog box), Find By Surname (allows you to find a record by 
-surname entered via a dialog box),List All (displays the 
-contents of the collection as a dialog containing a JTable)
-
-Records: Create, Modify, Delete, Set Overdraft (this should 
-use a dialog to allow you to set or update the overdraft for 
-a current account), Set Interest Rate (this should allow you 
-to set the interest rate for deposit accounts by means of a 
-dialog)
-
-Transactions: Deposit, Withdraw (these should use dialogs which
-allow you to specify an account number and the amount to withdraw
-or deposit, and should check that a withdrawal would not cause
-the overdraft limit for a current account to be exceeded, or be 
-greater than the balance in a deposit account, before the balance 
-is updated), Calculate Interest (this calculates the interest rate 
-for all deposit accounts and updates the balances)
-
-File: Open, Save, Save As (these should use JFileChooser dialogs. 
-The random access file should be able to hold 25 records. The position 
-in which a record is stored and retrieved will be determined by its account 
-number by means of a hashing procedure, with a standard method being used when 
-dealing with possible hash collisions)
-
-Exit Application (this should make sure that the collection is saved - or that 
-the user is given the opportunity to save the collection - before the application closes)
-
-When presenting the results in a JTable for the List All option, the records should be sortable on all fields, but not editable (changing the records or adding and deleting records can only be done through the main dialog).
-For all menu options in your program, you should perform whatever validation, error-checking and exception-handling you consider to be necessary.
-The programs Person.java and PersonApplication.java (from OOSD2) and TableDemo.java may be of use to you in constructing your interfaces. The set of Java programs used to create, edit and modify random access files will also provide you with a basis for your submission.
-
-*/

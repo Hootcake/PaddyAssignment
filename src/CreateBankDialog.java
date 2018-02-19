@@ -62,13 +62,6 @@ public class CreateBankDialog extends JFrame {
 		setLayout(new BorderLayout());
 		
 		JPanel dataPanel = new JPanel(new MigLayout());
-		
-		
-		
-		
-		
-		
-		
 		String[] comboTypes = {"Current", "Deposit"};
 		
 		final JComboBox comboBox = new JComboBox(comboTypes);
@@ -133,32 +126,17 @@ public class CreateBankDialog extends JFrame {
 		add(buttonPanel, BorderLayout.SOUTH);
 		
 		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				
-				
+			public void actionPerformed(ActionEvent e) {				
 				String accountNumber = accountNumberTextField.getText();
-				
-				
-							
-				
-				String surname = surnameTextField.getText();
-				String firstName = firstNameTextField.getText();
-			
-				String accountType = comboBox.getSelectedItem().toString();
-				
+				String surname = surnameTextField.getText().trim();
+				String firstName = firstNameTextField.getText().trim();	
+				System.out.println(surname + firstName);
+				String accountType = comboBox.getSelectedItem().toString();			
 				String balanceStr = balanceTextField.getText();
 				String overdraftStr = overdraftTextField.getText();
-				
-				
-
-				double balance;
-				double overdraft;
-				
-		
-				if (accountNumber != null && accountNumber.length()==8 && surname != null && firstName != null && accountType != null) {
+				double balance, overdraft;			
+				if (accountNumber != null && accountNumber.length()==8 && !surname.isEmpty() && !firstName.isEmpty() && accountType != null) {
 					try {
-						
 						boolean idTaken = false;
 						boolean accNumTaken=false;
 							
