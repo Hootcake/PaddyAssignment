@@ -29,7 +29,6 @@ public class CreateBankDialog extends JFrame {
 		table = accounts;
 		setupDialog();
 		setLayout(new BorderLayout());
-		
 		String[] comboTypes = {"Current", "Deposit"};
 		final JComboBox<String> comboBox = new JComboBox<String>(comboTypes);
 		dataPanel.add(comboBox, "growx, pushx, wrap");
