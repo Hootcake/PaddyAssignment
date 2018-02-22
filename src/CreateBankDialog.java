@@ -15,70 +15,24 @@ public class CreateBankDialog extends JFrame {
 	Random rand = new Random();
 	ArrayList<BankAccount> accountList;
 	HashMap<Integer, BankAccount> table = new HashMap<Integer, BankAccount>();
-	
-	public void put(int key, BankAccount value){
-		int hash = (key%TABLE_SIZE);
-		while(table.containsKey(key)){
-			hash = hash+1;
-		}
-		table.put(hash, value);
-	}
-	
-	// Constructor code based on that for the Create and Edit dialog classes in the Shapes exercise.
-
-	private JLabel accountIDLabel, accountNumberLabel, firstNameLabel, surnameLabel, 
+	private JLabel accountNumberLabel, firstNameLabel, surnameLabel, 
 	accountTypeLabel, balanceLabel, overdraftLabel; 
-	private JComboBox comboBox;
+	private JPanel dataPanel = new JPanel(new MigLayout());
 	private JTextField accountNumberTextField;
-	private final JTextField firstNameTextField, surnameTextField, accountTypeTextField, 
+	private JTextField firstNameTextField, surnameTextField, accountTypeTextField, 
 	balanceTextField, overdraftTextField;
 	
-	CreateBankDialog(HashMap accounts) {
+	// Constructor code based on that for the Create and Edit dialog classes in the Shapes exercise.
+	
+	 CreateBankDialog(HashMap<Integer, BankAccount> accounts) {
 		super("Add Bank Details");
 		table = accounts;
+		setupDialog();
 		setLayout(new BorderLayout());
-		JPanel dataPanel = new JPanel(new MigLayout());
+		
 		String[] comboTypes = {"Current", "Deposit"};
-		final JComboBox comboBox = new JComboBox(comboTypes);
-		accountNumberLabel = new JLabel("Account Number: ");
-		accountNumberTextField = new JTextField(15);
-		accountNumberTextField.setEditable(true);
-
-		surnameLabel = new JLabel("Last Name: ");
-		surnameTextField = new JTextField(15);
-		surnameTextField.setEditable(true);
-		
-		firstNameLabel = new JLabel("First Name: ");
-		firstNameTextField = new JTextField(15);
-		firstNameTextField.setEditable(true);
-		
-		accountTypeLabel = new JLabel("Account Type: ");
-		accountTypeTextField = new JTextField(5);
-		accountTypeTextField.setEditable(true);
-		
-		balanceLabel = new JLabel("Balance: ");
-		balanceTextField = new JTextField(10);
-		balanceTextField.setText("0.0");
-		balanceTextField.setEditable(false);
-			
-		overdraftLabel = new JLabel("Overdraft: ");
-		overdraftTextField = new JTextField(10);
-		overdraftTextField.setText("0.0");
-		overdraftTextField.setEditable(false);
-		
-
-		dataPanel.add(accountNumberLabel, "growx, pushx");
-		dataPanel.add(accountNumberTextField, "growx, pushx, wrap");
-		dataPanel.add(firstNameLabel, "growx, pushx");
-		dataPanel.add(firstNameTextField, "growx, pushx, wrap");
-		dataPanel.add(surnameLabel, "growx, pushx");
-		dataPanel.add(surnameTextField, "growx, pushx, wrap");
-		dataPanel.add(accountTypeLabel, "growx, pushx");	
+		final JComboBox<String> comboBox = new JComboBox<String>(comboTypes);
 		dataPanel.add(comboBox, "growx, pushx, wrap");
-		dataPanel.add(overdraftLabel, "growx, pushx");
-		dataPanel.add(overdraftTextField, "growx, pushx, wrap");
-		dataPanel.add(balanceLabel, "growx, pushx");
-		dataPanel.add(balanceTextField, "growx, pushx, wrap");
 		add(dataPanel, BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -109,22 +63,15 @@ public class CreateBankDialog extends JFrame {
 	}
 	
 	public void handleAccount(String accType) {
-		String accountNumber = accountNumberTextField.getText();
-		String surname = surnameTextField.getText().trim();
-		String firstName = firstNameTextField.getText().trim();	
-		System.out.println(surname + firstName);			
-		String balanceStr = balanceTextField.getText();
-		String overdraftStr = overdraftTextField.getText();
-		double balance, overdraft;			
-		if (accountNumber != null && accountNumber.length()==8 && !surname.isEmpty() && !firstName.isEmpty() && accType != null) {
+		final String accountNumber = accountNumberTextField.getText();
+		final String surname = surnameTextField.getText().trim();
+		final String firstName = firstNameTextField.getText().trim();	
+		if (accountNumber != null && accountNumber.length()==8 && Double.parseDouble(accountNumber) >= 0 && !surname.isEmpty() && !firstName.isEmpty() && accType != null) {
 			try {
-				boolean idTaken = false;
 				boolean accNumTaken=false;	
 				int randNumber = rand.nextInt(24) + 1;
-				
 				 for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
 					 while(randNumber == entry.getValue().getAccountID()){
-						 idTaken = true;
 						 randNumber = rand.nextInt(24)+1;
 					 }		 
 				 }
@@ -154,7 +101,45 @@ public class CreateBankDialog extends JFrame {
 		}
 		else JOptionPane.showMessageDialog(null, "Please make sure all fields have values, and Account Number is a unique 8 digit number");
 		dispose();
-	
 	}
 	
+	private void setupDialog() {
+		accountNumberLabel = new JLabel("Account Number: ");
+		accountNumberTextField = new JTextField(15);
+		accountNumberTextField.setEditable(true);
+
+		surnameLabel = new JLabel("Last Name: ");
+		surnameTextField = new JTextField(15);
+		surnameTextField.setEditable(true);
+		
+		firstNameLabel = new JLabel("First Name: ");
+		firstNameTextField = new JTextField(15);
+		firstNameTextField.setEditable(true);
+		
+		accountTypeLabel = new JLabel("Account Type: ");
+		accountTypeTextField = new JTextField(5);
+		accountTypeTextField.setEditable(true);
+		
+		balanceLabel = new JLabel("Balance: ");
+		balanceTextField = new JTextField(10);
+		balanceTextField.setText("0.0");
+		balanceTextField.setEditable(false);
+			
+		overdraftLabel = new JLabel("Overdraft: ");
+		overdraftTextField = new JTextField(10);
+		overdraftTextField.setText("0.0");
+		overdraftTextField.setEditable(false);
+		
+		dataPanel.add(accountNumberLabel, "growx, pushx");
+		dataPanel.add(accountNumberTextField, "growx, pushx, wrap");
+		dataPanel.add(firstNameLabel, "growx, pushx");
+		dataPanel.add(firstNameTextField, "growx, pushx, wrap");
+		dataPanel.add(surnameLabel, "growx, pushx");
+		dataPanel.add(surnameTextField, "growx, pushx, wrap");
+		dataPanel.add(overdraftLabel, "growx, pushx");
+		dataPanel.add(overdraftTextField, "growx, pushx, wrap");
+		dataPanel.add(balanceLabel, "growx, pushx");
+		dataPanel.add(balanceTextField, "growx, pushx, wrap");
+		dataPanel.add(accountTypeLabel, "growx, pushx");	
+	}
 }

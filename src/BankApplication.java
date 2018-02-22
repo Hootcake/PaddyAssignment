@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,14 +30,14 @@ import net.miginfocom.swing.MigLayout;
 
 public class BankApplication extends JFrame {
 	
+
+	private static final long serialVersionUID = 1L;
 	ArrayList<BankAccount> accountList = new ArrayList<BankAccount>();
 	static HashMap<Integer, BankAccount> table = new HashMap<Integer, BankAccount>();
 	private final static int TABLE_SIZE = 29;
-	static private final String newline = "\n";
 	JMenuBar menuBar;
 	private static RandomAccessFile input;
 	private static RandomAccessFile output;
-	private static final int NUMBER_RECORDS = 100;
 	JMenu navigateMenu, recordsMenu, transactionsMenu, fileMenu, exitMenu;
 	JMenuItem nextItem, prevItem, firstItem, lastItem, findByAccount, findBySurname, listAll, closeApp, createItem, modifyItem, deleteItem, setOverdraft, setInterest, open, save, saveAs, deposit, withdraw, calcInterest; 
 	JButton firstItemButton, lastItemButton, nextItemButton, prevItemButton;
@@ -54,52 +53,40 @@ public class BankApplication extends JFrame {
 	
 	private BankApplication() {	
 		super("Bank Application");	
-		int currentItem;
 		initComponents();
 	}
 
 	private void initComponents() {
 		swingSetup();
     	setDefaultCloseOperation(EXIT_ON_CLOSE);
-    	
 		setOverdraft.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				setOverdraft();
 			}
 		});
-	
 		ActionListener first = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				first();
 			}
-		};
-		
+		};	
 		ActionListener next = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				next();
 			}
-		};
-		
-		ActionListener next1 = new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				next1();	
-			}
-		};
-		
+		};	
 		ActionListener prev = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				prev();
 			}
 		};
-	
 		ActionListener last = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				last();
 			}
 		};
 		
-		nextItemButton.addActionListener(next1);
-		nextItem.addActionListener(next1);
+		nextItemButton.addActionListener(next);
+		nextItem.addActionListener(next);
 		
 		prevItemButton.addActionListener(prev);
 		prevItem.addActionListener(prev);
@@ -121,74 +108,61 @@ public class BankApplication extends JFrame {
 				new CreateBankDialog(table);		
 			}
 		});
-		
-		
 		modifyItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				modifyItem();
 			}
 		});
-		
 		setInterest.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){			
 				setInterest();
 			}
 		});
-		
 		listAll.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				listAll();
 			}
-		});
-		
+		});	
 		open.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				open();
 			}
-		});
-		
+		});	
 		save.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				writeFile();
 			}
-		});
-		
+		});	
 		saveAs.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				saveFileAs();
 			}
-		});
-		
+		});		
 		closeApp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeApp();
 			}
-		});	
-		
+		});		
 		findBySurname.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
 				findBySurname();
 			}
-		});
-		
+		});	
 		findByAccount.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
 				findByAccount();
 			}
-		});
-		
+		});	
 		deposit.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				deposit();
 			}
-		});
-		
+		});	
 		withdraw.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				withdraw();
 			}
 		});
-		
 		calcInterest.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				calcInterest();
@@ -341,8 +315,7 @@ public class BankApplication extends JFrame {
 	}
 
 	private void listAll() {
-		JFrame frame = new JFrame("TableDemo");
-		JPanel pan = new JPanel();
+		JFrame frame = new JFrame("Accounts");
 	
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		String col[] = {"ID","Number","Name", "Account Type", "Balance", "Overdraft"};
@@ -450,35 +423,41 @@ public class BankApplication extends JFrame {
 	
 	}
 	
-	private static void openFileRead()
+	private static boolean openFileRead()
 	   {
-		
-		table.clear();
-			
 		fc = new JFileChooser();
 		int returnVal = fc.showOpenDialog(null);
 		 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-
+			if (fc.getSelectedFile().length() > 0L) { 
+				File file = fc.getSelectedFile();
+				table.clear();
+				return true;
+			}
+			else {
+				System.out.println("Empty File");
+				return false;
+			}
         } else {
                 }
-
 			
 		      try // open file
 		      {
-		    	  if(fc.getSelectedFile()!=null)
+		    	  if(fc.getSelectedFile()!=null) {
 		    		  input = new RandomAccessFile( fc.getSelectedFile(), "r" );
+		    		  return true;
+		    	  }
+	
 		      } // end try
 		      catch ( IOException ioException )
 		      {
 		    	  JOptionPane.showMessageDialog(null, "File Does Not Exist.");
+		    	  return false;
 		      } // end catch
-			
+			return false;
 	   } // end method openFile
 		
-	private static void openFileWrite()
-	   {
+	private static void openFileWrite(){
 		if(fileToSaveAs!=""){
 	      try // open file
 	      {
@@ -489,7 +468,7 @@ public class BankApplication extends JFrame {
 	      {
 	    	  JOptionPane.showMessageDialog(null, "File does not exist.");
 	      } // end catch
-		}
+			}
 		else
 			saveToFileAs();
 	   }
@@ -539,33 +518,21 @@ public class BankApplication extends JFrame {
 	      RandomAccessBankAccount record = new RandomAccessBankAccount();
 	      try // read a record and display
 	      {
-	         while ( true )
-	         {
-	            do
-	            {
+	         while ( true ){
+	            do {
 	            	if(input!=null)
 	            		record.read( input );
-	            } while ( record.getAccountID() == 0 );
-
-	       
+	            } while ( record.getAccountID() == 0 );    
 	            
 	            BankAccount ba = new BankAccount(record.getAccountID(), record.getAccountNumber(), record.getFirstName(),
-	                    record.getSurname(), record.getAccountType(), record.getBalance(), record.getOverdraft());
-	            
-	            
-	            Integer key = Integer.valueOf(ba.getAccountNumber().trim());
-			
+	                    record.getSurname(), record.getAccountType(), record.getBalance(), record.getOverdraft());            
+	            Integer key = Integer.valueOf(ba.getAccountNumber().trim());		
 				int hash = (key%TABLE_SIZE);
-		
-				
 				while(table.containsKey(hash)){
 			
 					hash = hash+1;
-				}
-				
+				}	
 	            table.put(hash, ba);
-		
-
 	         } // end while
 	      } // end try
 	      catch ( EOFException eofException ) // close file
@@ -581,7 +548,6 @@ public class BankApplication extends JFrame {
 	
 	private static void saveToFile(){
 		  RandomAccessBankAccount record = new RandomAccessBankAccount();	
-	      Scanner input = new Scanner( System.in );     
 	      for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
 			   record.setAccountID(entry.getValue().getAccountID());
 			   record.setAccountNumber(entry.getValue().getAccountNumber());
@@ -623,18 +589,6 @@ public class BankApplication extends JFrame {
 	}
 	
 	private void next() {
-		saveOpenValues();
-		if(!table.isEmpty()) {
-			currentItem=0;
-			while(!table.containsKey(currentItem)){
-				currentItem++;
-			}
-			displayDetails(currentItem);
-		}
-		
-	}
-	
-	private void next1() {
 		ArrayList<Integer> keyList = new ArrayList<Integer>();
 		int i=0;
 
@@ -645,7 +599,6 @@ public class BankApplication extends JFrame {
 		}
 		
 		int maxKey = Collections.max(keyList);
-
 		saveOpenValues();	
 
 			if(currentItem<maxKey){
@@ -654,13 +607,13 @@ public class BankApplication extends JFrame {
 					currentItem++;
 				}
 			}
-			displayDetails(currentItem);	
+			displayDetails(currentItem);
 	}
+	
 	
 	private static void writeFile(){
 		openFileWrite();
 		saveToFile();
-		//addRecords();
 		closeFile();
 	}
 	
@@ -671,25 +624,14 @@ public class BankApplication extends JFrame {
 	}
 	
 	private static void readFile(){
-	    openFileRead();
+	    if(openFileRead() == true) {
 	    readRecords();
-	    closeFile();		
-	}
-	
-	private void put(int key, BankAccount value){
-		int hash = (key%TABLE_SIZE);
-	
-		while(table.containsKey(key)){
-			hash = hash+1;
-		
-		}
-		table.put(hash, value);
-
+	    closeFile();	
+	    }
 	}
 	
 	public static void main(String[] args) {
 		BankApplication ba = new BankApplication();
-		ba.setSize(1200,400);
 		ba.pack();
 		ba.setVisible(true);
 	}
