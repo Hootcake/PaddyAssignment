@@ -5,7 +5,7 @@ import java.util.*;
 import javax.swing.*;
 
 import net.miginfocom.swing.MigLayout;
-
+	
 public class CreateBankDialog extends JFrame {
 	
 	private static final long serialVersionUID = 1L;

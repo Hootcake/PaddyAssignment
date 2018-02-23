@@ -20,34 +20,21 @@ public class File_IO_Utils extends BankApplication{
      if (returnVal == JFileChooser.APPROVE_OPTION) {
 			if (fc.getSelectedFile().length() > 0L) { 
 				File file = fc.getSelectedFile();
-				table.clear();
+				table.clear();	
 				
 			}
 			else {
-				System.out.println("Empty File");
-				
+				System.out.println("Empty File");	
 			}
      } else {
              }
 			
-		      try // open file
-		      {
-		    	  if(fc.getSelectedFile()!=null) {
-		    		  input = new RandomAccessFile( fc.getSelectedFile(), "r" );
-		    		  
-		    	  }
-	
-		      } // end try
-		      catch ( IOException ioException )
-		      {
-		    	  JOptionPane.showMessageDialog(null, "File Does Not Exist.");
-		      } // end catch
 	   } // end method openFile
 		
 	static void readFile(){
 		openFileRead();
-	    readRecords();
-	    closeFile();	
+		readRecords();
+	    closeFile();
 	    
 	}
 	 

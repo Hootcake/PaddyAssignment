@@ -127,7 +127,6 @@ public class NavigationUtils extends BankApplication{
 		
 		static void listAll() {
 			JFrame frame = new JFrame("Accounts");
-
 	        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			String col[] = {"ID","Number","Name", "Account Type", "Balance", "Overdraft"};
 			

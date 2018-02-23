@@ -8,23 +8,22 @@ import net.miginfocom.swing.MigLayout;
 
 public class BankApplication extends JFrame {
 	private static final long serialVersionUID = 1L;
-	ArrayList<BankAccount> accountList = new ArrayList<BankAccount>();
 	public static HashMap<Integer, BankAccount> table = new HashMap<Integer, BankAccount>();
 	public final static int TABLE_SIZE = 29;
-	JMenuBar menuBar;
+	private JMenuBar menuBar;
 	static RandomAccessFile input;
 	static RandomAccessFile output;
 	JMenu navigateMenu, recordsMenu, transactionsMenu, fileMenu, exitMenu;
-	JMenuItem nextItem, prevItem, firstItem, lastItem, findByAccount, findBySurname, listAll, closeApp, createItem, modifyItem, deleteItem, setOverdraft, setInterest, open, save, saveAs, deposit, withdraw, calcInterest; 
-	JButton firstItemButton, lastItemButton, nextItemButton, prevItemButton;
-	JLabel accountIDLabel, accountNumberLabel, firstNameLabel, surnameLabel, accountTypeLabel, balanceLabel, overdraftLabel;
+	private JMenuItem nextItem, prevItem, firstItem, lastItem, findByAccount, findBySurname, listAll, closeApp, createItem, modifyItem, deleteItem, setOverdraft, setInterest, open, save, saveAs, deposit, withdraw, calcInterest; 
+	private JButton firstItemButton, lastItemButton, nextItemButton, prevItemButton;
+	private JLabel accountIDLabel, accountNumberLabel, firstNameLabel, surnameLabel, accountTypeLabel, balanceLabel, overdraftLabel;
 	static JTextField accountIDTextField, accountNumberTextField, 
 	firstNameTextField, surnameTextField, accountTypeTextField, balanceTextField, overdraftTextField;
 	static JFileChooser fc;
 	static JTable jTable;
 	static double interestRate;
 	public static int currentItem = 0;
-	boolean openValues;
+	private boolean openValues;
 	static String fileToSaveAs = "";
 
 	
@@ -370,13 +369,13 @@ public class BankApplication extends JFrame {
 		
 		navigateMenu = new JMenu("Navigate");
     	
-    	nextItem = new JMenuItem("Next Item");
-    	prevItem = new JMenuItem("Previous Item");
-    	firstItem = new JMenuItem("First Item");
-    	lastItem = new JMenuItem("Last Item");
+    	nextItem = new JMenuItem("Next Account");
+    	prevItem = new JMenuItem("Previous Account");
+    	firstItem = new JMenuItem("First Account");
+    	lastItem = new JMenuItem("Last Account");
     	findByAccount = new JMenuItem("Find by Account Number");
     	findBySurname = new JMenuItem("Find by Surname");
-    	listAll = new JMenuItem("List All Records");
+    	listAll = new JMenuItem("List All Records");	
     	
     	navigateMenu.add(nextItem);
     	navigateMenu.add(prevItem);
