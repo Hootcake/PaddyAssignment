@@ -1,36 +1,13 @@
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 
 public class BankApplication extends JFrame {
-	
-
 	private static final long serialVersionUID = 1L;
 	ArrayList<BankAccount> accountList = new ArrayList<BankAccount>();
 	static HashMap<Integer, BankAccount> table = new HashMap<Integer, BankAccount>();
@@ -269,8 +246,8 @@ public class BankApplication extends JFrame {
 			 JOptionPane.showMessageDialog(null, "Surname " + sName + " not found.");
 	}
 	
-	public void setCurrentEntry(Map.Entry<Integer, BankAccount> entry) {
-		accountIDTextField.setText(entry.getValue().getAccountID()+"");
+	private void setCurrentEntry(Map.Entry<Integer, BankAccount> entry) {
+		 accountIDTextField.setText(entry.getValue().getAccountID()+"");
 		 accountNumberTextField.setText(entry.getValue().getAccountNumber());
 		 surnameTextField.setText(entry.getValue().getSurname());
 		 firstNameTextField.setText(entry.getValue().getFirstName());
@@ -306,8 +283,8 @@ public class BankApplication extends JFrame {
 
 	private void listAll() {
 		JFrame frame = new JFrame("Accounts");
-	
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		String col[] = {"ID","Number","Name", "Account Type", "Balance", "Overdraft"};
 		
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
@@ -316,8 +293,6 @@ public class BankApplication extends JFrame {
 		jTable.setAutoCreateRowSorter(true);
 		
 		for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
-		   
-		    
 		    Object[] objs = {entry.getValue().getAccountID(), entry.getValue().getAccountNumber(), 
 		    				entry.getValue().getFirstName().trim() + " " + entry.getValue().getSurname().trim(), 
 		    				entry.getValue().getAccountType(), entry.getValue().getBalance(), 
@@ -327,7 +302,6 @@ public class BankApplication extends JFrame {
 		}
 		frame.setSize(600,500);
 		frame.add(scrollPane);
-		//frame.pack();
         frame.setVisible(true);		
 	}
 
@@ -360,8 +334,7 @@ public class BankApplication extends JFrame {
 			currentItem =29;					
 			while(!table.containsKey(currentItem)){
 				currentItem--;			
-			}
-			
+			}	
 			displayDetails(currentItem);
 		}
 	}
@@ -771,5 +744,4 @@ public class BankApplication extends JFrame {
     	exitMenu.add(closeApp);	
     	menuBar.add(exitMenu);	
 	}
-	
 }

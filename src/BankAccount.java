@@ -1,5 +1,3 @@
-
-
 public class BankAccount {
 	
 	private int accountID;
@@ -58,10 +56,6 @@ public class BankAccount {
 	
 	public void setAccountType(String accountType) {
 		this.accountType = accountType;
-	}
-	
-	public void setAccType(String accType){
-		accType = accType;
 	}
 	
 	public String getAccType(){

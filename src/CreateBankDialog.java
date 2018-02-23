@@ -1,6 +1,4 @@
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -12,15 +10,13 @@ public class CreateBankDialog extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private final static int TABLE_SIZE = 29;
-	Random rand = new Random();
-	ArrayList<BankAccount> accountList;
-	HashMap<Integer, BankAccount> table = new HashMap<Integer, BankAccount>();
+	private final Random rand = new Random();
+	private HashMap<Integer, BankAccount> table = new HashMap<Integer, BankAccount>();
 	private JLabel accountNumberLabel, firstNameLabel, surnameLabel, 
 	accountTypeLabel, balanceLabel, overdraftLabel; 
 	private JPanel dataPanel = new JPanel(new MigLayout());
-	private JTextField accountNumberTextField;
 	private JTextField firstNameTextField, surnameTextField, accountTypeTextField, 
-	balanceTextField, overdraftTextField;
+	balanceTextField, overdraftTextField,accountNumberTextField;
 	
 	// Constructor code based on that for the Create and Edit dialog classes in the Shapes exercise.
 	
@@ -28,37 +24,6 @@ public class CreateBankDialog extends JFrame {
 		super("Add Bank Details");
 		table = accounts;
 		setupDialog();
-		setLayout(new BorderLayout());
-		String[] comboTypes = {"Current", "Deposit"};
-		final JComboBox<String> comboBox = new JComboBox<String>(comboTypes);
-		dataPanel.add(comboBox, "growx, pushx, wrap");
-		add(dataPanel, BorderLayout.CENTER);
-		
-		JPanel buttonPanel = new JPanel(new FlowLayout());
-		JButton addButton = new JButton("Add");
-		JButton cancelButton = new JButton("Cancel");
-		
-		buttonPanel.add(addButton);
-		buttonPanel.add(cancelButton);
-		
-		add(buttonPanel, BorderLayout.SOUTH);
-		
-		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
-				handleAccount(comboBox.getSelectedItem().toString());
-			}
-		});
-		
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
-		
-		setSize(400,800);
-		pack();
-		setVisible(true);
-
 	}
 	
 	public void handleAccount(String accType) {
@@ -67,7 +32,7 @@ public class CreateBankDialog extends JFrame {
 		final String firstName = firstNameTextField.getText().trim();	
 		if (accountNumber != null && accountNumber.length()==8 && Double.parseDouble(accountNumber) >= 0 && !surname.isEmpty() && !firstName.isEmpty() && accType != null) {
 			try {
-				boolean accNumTaken=false;	
+				boolean accNumTaken = false;	
 				int randNumber = rand.nextInt(24) + 1;
 				 for (Map.Entry<Integer, BankAccount> entry : table.entrySet()) {
 					 while(randNumber == entry.getValue().getAccountID()){
@@ -139,6 +104,38 @@ public class CreateBankDialog extends JFrame {
 		dataPanel.add(overdraftTextField, "growx, pushx, wrap");
 		dataPanel.add(balanceLabel, "growx, pushx");
 		dataPanel.add(balanceTextField, "growx, pushx, wrap");
-		dataPanel.add(accountTypeLabel, "growx, pushx");	
+		dataPanel.add(accountTypeLabel, "growx, pushx");
+		
+		setLayout(new BorderLayout());
+		final String[] accountTypes = {"Current", "Deposit"};
+		final JComboBox<String> comboBox = new JComboBox<String>(accountTypes);
+		dataPanel.add(comboBox, "growx, pushx, wrap");
+		add(dataPanel, BorderLayout.CENTER);
+		
+		JPanel buttonPanel = new JPanel(new FlowLayout());
+		JButton addButton = new JButton("Add");
+		JButton cancelButton = new JButton("Cancel");
+		
+		buttonPanel.add(addButton);
+		buttonPanel.add(cancelButton);
+		
+		add(buttonPanel, BorderLayout.SOUTH);
+		
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				handleAccount(comboBox.getSelectedItem().toString());
+			}
+		});
+		
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		
+		setSize(400,800);
+		pack();
+		setVisible(true);
+
 	}
 }

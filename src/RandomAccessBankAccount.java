@@ -1,5 +1,3 @@
-
-
 import java.io.RandomAccessFile;
 import java.io.IOException;
 
@@ -31,7 +29,6 @@ public class RandomAccessBankAccount extends BankAccount {
 			temp = file.readChar();
 			name[count] = temp;
 		}
-		
 		return new String(name).replace('\0', ' ');
 	}
 	
